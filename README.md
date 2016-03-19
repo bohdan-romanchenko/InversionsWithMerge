@@ -1,4 +1,4 @@
-# InversionsWithMerge
+# is41_Romanchenko_02
 With decomposition method an algorithm that would solve the following
 task.
 
