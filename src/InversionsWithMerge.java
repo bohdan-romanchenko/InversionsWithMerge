@@ -10,6 +10,15 @@ public class InversionsWithMerge {
     private static int countUsers;
     private static int countFilms;
     private static int aimUser;
+    private static int[] countOfInvertions;
+
+    public static int[] getCountOfInvertions() {
+        return countOfInvertions;
+    }
+
+    public static void setCountOfInvertions(int[] countOfInvertions) {
+        InversionsWithMerge.countOfInvertions = countOfInvertions;
+    }
 
     public static int getAimUser() {
         return aimUser;
@@ -54,22 +63,26 @@ public class InversionsWithMerge {
 
         assert read != null;
         setCountUsers(read.nextInt());
-
         setCountFilms(read.nextInt());
-
         setAimUser(Integer.parseInt(args[1]));
-
         setInputtedArray(readIntArrayFromFile(read, getCountUsers(), getCountFilms()));
-
-        printArray();
-
         setInputtedArray(convertInArray());
 
-        System.out.println();
+        amountOfInvertions();
 
-        printArray();
+//        Arrays.sort(getCountOfInvertions());
+        for (int i = 0; i < getCountUsers(); i++){
+            System.out.println((i + 1) + " " + getCountOfInvertions()[i]);
+        }
 
-        System.out.println("Aim user : " + getAimUser());
+    }
+
+    private static void amountOfInvertions()
+    {
+        countOfInvertions = new int[getCountUsers()];
+        for (int i = 0; i < getCountUsers(); i++){
+            mergeSort(getInputtedArray()[i], 1, getCountFilms(), i);
+        }
     }
 
     private static int[][] readIntArrayFromFile(Scanner read, int rows, int columns){
@@ -85,9 +98,8 @@ public class InversionsWithMerge {
 
     private static void printArray(){
         for (int i = 0; i < getCountUsers(); i++){
-            for (int j = 0; j < getCountFilms() + 1; j++){
+            for (int j = 0; j < getCountFilms() + 1; j++)
                 System.out.print(getInputtedArray()[i][j] + " ");
-            }
             System.out.println();
         }
     }
@@ -109,10 +121,9 @@ public class InversionsWithMerge {
         return returnArray;
     }
 
-    private void merge(int []A, int p, int q, int r){
+    private static void merge(int []A, int p, int q, int r, int numberArray){
         int n1 = q - p + 1, n2 = r - q;
         int L[] = new int[n1 + 1], R[] = new int[n2 + 1];
-
         for (int i = 0; i < n1; i++)
             L[i] = A[p + i];
 
@@ -131,17 +142,18 @@ public class InversionsWithMerge {
             else {
                 A[k] = R[j];
                 j++;
+                getCountOfInvertions()[numberArray] += (n1 - i);
             }
         }
     }
 
-    public void mergeSort(int []A, int left, int right){
+    public static void mergeSort(int[] A, int left, int right, int numberArray){
         if (left < right) {
             int middle = (left + right) / 2;
-            mergeSort(A, left, middle);
-            mergeSort(A, middle + 1, right);
-            merge(A, left, middle, right);
+
+                mergeSort(A, left, middle, numberArray);
+                mergeSort(A, middle + 1, right, numberArray);
+                merge(A, left, middle, right, numberArray);
         }
     }
-
 }
