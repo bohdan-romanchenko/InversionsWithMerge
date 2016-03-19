@@ -1,5 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -70,19 +70,36 @@ public class InversionsWithMerge {
 
         amountOfInvertions();
 
-//        Arrays.sort(getCountOfInvertions());
-        for (int i = 0; i < getCountUsers(); i++){
-            System.out.println((i + 1) + " " + getCountOfInvertions()[i]);
-        }
+        int[] answers;
 
+        answers = getCountOfInvertions().clone();
+        Arrays.sort(getCountOfInvertions());
+        String answerString = "";
+        answerString += getAimUser() + "\n";
+        for (int i = 1; i < getCountUsers(); i++)
+            for (int j = 1; j < getCountUsers(); j++)
+                if (answers[j] == getCountOfInvertions()[i]){
+                    answers[j] = Integer.MAX_VALUE;
+                    answerString += ((j + 1) + " " + getCountOfInvertions()[i] + "\n");
+                    break;
+                }
+        File outputFile = new File("is41_Romanchenko_02_output.txt");
+        try {
+            outputFile.createNewFile();
+            FileWriter fw = new FileWriter(outputFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(answerString);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void amountOfInvertions()
     {
         countOfInvertions = new int[getCountUsers()];
-        for (int i = 0; i < getCountUsers(); i++){
+        for (int i = 0; i < getCountUsers(); i++)
             mergeSort(getInputtedArray()[i], 1, getCountFilms(), i);
-        }
     }
 
     private static int[][] readIntArrayFromFile(Scanner read, int rows, int columns){
