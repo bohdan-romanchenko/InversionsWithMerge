@@ -65,7 +65,10 @@ public class is41_Romanchenko_02 {
         setInputtedArray(convertInArray());
 
         amountOfInvertions();
+        output();
+    }
 
+    private static void output(){
         int[] answers;
 
         answers = getCountOfInvertions().clone();
@@ -73,7 +76,7 @@ public class is41_Romanchenko_02 {
         String answerString = "";
         answerString += getAimUser() + "\n";
         for (int i = 1; i < getCountUsers(); i++)
-            for (int j = 1; j < getCountUsers(); j++)
+            for (int j = 0; j < getCountUsers(); j++)
                 if (answers[j] == getCountOfInvertions()[i]){
                     answers[j] = Integer.MAX_VALUE;
                     answerString += ((j + 1) + " " + getCountOfInvertions()[i] + "\n");
@@ -81,7 +84,6 @@ public class is41_Romanchenko_02 {
                 }
         File outputFile = new File("is41_Romanchenko_02_output.txt");
         try {
-            outputFile.createNewFile();
             FileWriter fw = new FileWriter(outputFile);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(answerString);
@@ -91,8 +93,7 @@ public class is41_Romanchenko_02 {
         }
     }
 
-    private static void amountOfInvertions()
-    {
+    private static void amountOfInvertions() {
         countOfInvertions = new int[getCountUsers()];
         for (int i = 0; i < getCountUsers(); i++)
             mergeSort(getInputtedArray()[i], 1, getCountFilms(), i);
@@ -109,7 +110,7 @@ public class is41_Romanchenko_02 {
         return returnArray;
     }
 
-    //n^3
+    //n^3. wrong is here ;(
     private static int[][] convertInArray(){
         int [][] returnArray = getInputtedArray();
         int [] aimArray = new int[getCountFilms()];
