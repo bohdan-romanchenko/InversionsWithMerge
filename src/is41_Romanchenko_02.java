@@ -1,11 +1,8 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 /**
- * Created by Bohdan Romanchenko on 1/2/2016.
+ * Created by Bohdan Romanchenko on 19/04/2016.
  */
 public class is41_Romanchenko_02 {
 
@@ -22,7 +19,7 @@ public class is41_Romanchenko_02 {
             countOfUsers = read.nextInt();
             countOfFilms = read.nextInt();
 
-            aimUser = Integer.parseInt(args[1]);
+            aimUser = Integer.parseInt(args[0].replaceAll("\\D+",""));
 
             countInvertions = new int[countOfUsers];
 
@@ -59,27 +56,27 @@ public class is41_Romanchenko_02 {
     }
 
     public static void output() {
-        LinkedList<int[]> tempInversionsMatrix = new LinkedList<>();
-        for (int i = 0; i < countInvertions.length; i++)
-            tempInversionsMatrix.add(new int[]{i, countInvertions[i]});
+        int[] answers;
+
+        answers = countInvertions.clone();
         Arrays.sort(countInvertions);
-        String answerToWrite = "";
-        answerToWrite += aimUser + "\n";
-        for (int i = 0; i < countOfUsers; i++)
-            for (int j = 0; j < tempInversionsMatrix.size(); j++) {
-                if (countInvertions[i] == tempInversionsMatrix.get(j)[1] && countInvertions[i] != 0) {
-                    answerToWrite += ((tempInversionsMatrix.get(j)[0]+1)  + " " + countInvertions[i]) + "\n";
-                    tempInversionsMatrix.remove(j);
+        String answerString = "";
+        answerString += aimUser + "\n";
+        for (int i = 1; i < countOfUsers; i++)
+            for (int j = 0; j < countOfUsers; j++)
+                if (answers[j] == countInvertions[i]){
+                    answers[j] = Integer.MAX_VALUE;
+                    answerString += ((j + 1) + " " + countInvertions[i] + "\n");
                     break;
                 }
-            }
-        try{
-            PrintWriter writer = new PrintWriter(new File("is41_Romanchenko_02_output.txt"), "UTF-8");
-            writer.println(answerToWrite);
-            writer.close();
-        }catch (Exception e) {
+        File outputFile = new File("is41_Romanchenko_02_output.txt");
+        try {
+            FileWriter fw = new FileWriter(outputFile);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(answerString);
+            bw.close();
+        } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("problems with output file");
         }
     }
 
