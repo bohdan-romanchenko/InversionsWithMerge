@@ -12,42 +12,6 @@ public class is41_Romanchenko_02 {
     private static int aimUser;
     private static int[] countOfInvertions;
 
-    public static int[] getCountOfInvertions() {
-        return countOfInvertions;
-    }
-
-    public static int getAimUser() {
-        return aimUser;
-    }
-
-    public static void setAimUser(int aimUser) {
-        is41_Romanchenko_02.aimUser = aimUser;
-    }
-
-    public static int[][] getInputtedArray() {
-        return inputtedArray;
-    }
-
-    public static void setInputtedArray(int[][] inputtedArray) {
-        is41_Romanchenko_02.inputtedArray = inputtedArray;
-    }
-
-    public static int getCountUsers() {
-        return countUsers;
-    }
-
-    public static void setCountUsers(int countUsers) {
-        is41_Romanchenko_02.countUsers = countUsers;
-    }
-
-    public static int getCountFilms() {
-        return countFilms;
-    }
-
-    public static void setCountFilms(int countFilms) {
-        is41_Romanchenko_02.countFilms = countFilms;
-    }
-
     public static void main(String[] args) {
 
         Scanner read = null;
@@ -58,12 +22,12 @@ public class is41_Romanchenko_02 {
         }
 
         assert read != null;
-        setCountUsers(read.nextInt());
-        setCountFilms(read.nextInt());
-        setAimUser(Integer.parseInt(args[1]));
-        setInputtedArray(readIntArrayFromFile(read, getCountUsers(), getCountFilms()));
-        setInputtedArray(convertInArray());
-
+        countUsers = read.nextInt();
+        countFilms = read.nextInt();
+        aimUser = Integer.parseInt(args[1]);
+        inputtedArray = readIntArrayFromFile(read, countUsers, countFilms);
+        inputtedArray = fixRaitingForEachUser();
+        inputtedArray = convertInArray();
         amountOfInvertions();
         output();
     }
@@ -71,15 +35,15 @@ public class is41_Romanchenko_02 {
     private static void output(){
         int[] answers;
 
-        answers = getCountOfInvertions().clone();
-        Arrays.sort(getCountOfInvertions());
+        answers = countOfInvertions.clone();
+        Arrays.sort(countOfInvertions);
         String answerString = "";
-        answerString += getAimUser() + "\n";
-        for (int i = 1; i < getCountUsers(); i++)
-            for (int j = 0; j < getCountUsers(); j++)
-                if (answers[j] == getCountOfInvertions()[i]){
+        answerString += aimUser + "\n";
+        for (int i = 1; i < countUsers; i++)
+            for (int j = 0; j < countUsers; j++)
+                if (answers[j] == countOfInvertions[i]){
                     answers[j] = Integer.MAX_VALUE;
-                    answerString += ((j + 1) + " " + getCountOfInvertions()[i] + "\n");
+                    answerString += ((j + 1) + " " + countOfInvertions[i] + "\n");
                     break;
                 }
         File outputFile = new File("is41_Romanchenko_02_output.txt");
@@ -94,9 +58,9 @@ public class is41_Romanchenko_02 {
     }
 
     private static void amountOfInvertions() {
-        countOfInvertions = new int[getCountUsers()];
-        for (int i = 0; i < getCountUsers(); i++)
-            mergeSort(getInputtedArray()[i], 1, getCountFilms(), i);
+        countOfInvertions = new int[countUsers];
+        for (int i = 0; i < countUsers; i++)
+            mergeSort(inputtedArray[i], 1, countFilms, i);
     }
 
     private static int[][] readIntArrayFromFile(Scanner read, int rows, int columns){
@@ -110,18 +74,38 @@ public class is41_Romanchenko_02 {
         return returnArray;
     }
 
-    //n^3. wrong is here ;(
+    private static int[][] fixRaitingForEachUser(){
+
+        int [][] returnArray = new int[countUsers][countFilms + 1];
+        for (int i = 0; i < countUsers; i++)
+            System.arraycopy(inputtedArray[i], 0, returnArray[i], 0, countFilms + 1);
+        for (int i = 0; i < countUsers; i++){
+            for (int j = 1; j < countFilms + 1; j++){
+                returnArray[i][inputtedArray[i][j]] = j;
+            }
+        }
+        return returnArray;
+    }
+
+    //n^3. !! ISSUE !! wrong is here ;(
     private static int[][] convertInArray(){
-        int [][] returnArray = getInputtedArray();
-        int [] aimArray = new int[getCountFilms()];
+        int [][] returnArray = new int[countUsers][countFilms + 1];
+        for (int i = 0; i < countUsers; i++){
+            for (int j = 0; j < countFilms + 1; j++){
+                returnArray[i][j] = inputtedArray[i][j];
+            }
+        }
+        int [] aimArray = new int[countFilms + 1];
+        aimArray[0] = aimUser;
+        for (int i = 1; i < countFilms + 1; i++){
+            aimArray[i] = returnArray[aimUser - 1][i];
+        }
 
-        System.arraycopy(returnArray[getAimUser() - 1], 1, aimArray, 0, getCountFilms() + 1 - 1);
-
-        for (int i = 0; i < getCountUsers(); i ++)
-            for (int j = 1; j < getCountFilms() + 1; j++)
-                for (int key = 0; key < getCountFilms(); key++)
+        for (int i = 0; i < countUsers; i ++)
+            for (int j = 1; j < countFilms + 1; j++)
+                for (int key = 1; key < countFilms + 1; key++)
                     if (returnArray[i][j] == aimArray[key]) {
-                        returnArray[i][j] = key + 1;
+                        returnArray[i][j] = key;
                         break;
                     }
         return returnArray;
@@ -148,7 +132,7 @@ public class is41_Romanchenko_02 {
             else {
                 A[k] = RightArray[j];
                 j++;
-                getCountOfInvertions()[numberArray] += (n1 - i);
+                countOfInvertions[numberArray] += (n1 - i);
             }
         }
     }
