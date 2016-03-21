@@ -26,7 +26,6 @@ public class is41_Romanchenko_02 {
         countFilms = read.nextInt();
         aimUser = Integer.parseInt(args[1]);
         inputtedArray = readIntArrayFromFile(read, countUsers, countFilms);
-        inputtedArray = fixRaitingForEachUser();
         inputtedArray = convertInArray();
         amountOfInvertions();
         output();
@@ -74,31 +73,19 @@ public class is41_Romanchenko_02 {
         return returnArray;
     }
 
-    private static int[][] fixRaitingForEachUser(){
-
-        int [][] returnArray = new int[countUsers][countFilms + 1];
-        for (int i = 0; i < countUsers; i++)
-            System.arraycopy(inputtedArray[i], 0, returnArray[i], 0, countFilms + 1);
-        for (int i = 0; i < countUsers; i++){
-            for (int j = 1; j < countFilms + 1; j++){
-                returnArray[i][inputtedArray[i][j]] = j;
-            }
-        }
-        return returnArray;
-    }
-
     //n^3. !! ISSUE !! wrong is here ;(
     private static int[][] convertInArray(){
         int [][] returnArray = new int[countUsers][countFilms + 1];
         for (int i = 0; i < countUsers; i++){
-            for (int j = 0; j < countFilms + 1; j++){
-                returnArray[i][j] = inputtedArray[i][j];
-            }
+            System.arraycopy(inputtedArray[i], 0, returnArray[i], 0, countFilms + 1);
         }
         int [] aimArray = new int[countFilms + 1];
         aimArray[0] = aimUser;
-        for (int i = 1; i < countFilms + 1; i++){
-            aimArray[i] = returnArray[aimUser - 1][i];
+        for (int i = 0; i < countUsers; i++){
+            for (int j = 1; j < countFilms + 1; j++){
+                returnArray[i][inputtedArray[i][j]] = j;
+                aimArray[j] = returnArray[aimUser - 1][j];
+            }
         }
 
         for (int i = 0; i < countUsers; i ++)
